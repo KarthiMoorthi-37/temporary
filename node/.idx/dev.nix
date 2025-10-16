@@ -1,19 +1,14 @@
 # To learn more about how to use Nix to configure your environment
 # see: https://developers.google.com/idx/guides/customize-idx-env
-inputs: {
+{ pkgs, ... }: {
   # Which nixpkgs channel to use.
   channel = "stable-23.11"; # or "unstable"
   # Use https://search.nixos.org/packages to find packages
   packages = [
-    inputs.pkgs.nodejs_20
+    pkgs.nodejs_20
   ];
   # Sets environment variables in the workspace
   env = {};
-
-  # This command runs when the environment starts. It installs dependencies if
-  # they are missing and then starts the application.
-  entrypoint = "if [ ! -d 'node_modules' ]; then npm install --ignore-scripts; fi && npm run start -- --port $PORT";
-
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
@@ -32,7 +27,7 @@ inputs: {
       enable = true;
       previews = {
         web = {
-          # The command is now handled by the top-level 'entrypoint'
+          command = ["npm" "run" "start" "--" "--port" "$PORT"];
           manager = "web";
         };
       };
