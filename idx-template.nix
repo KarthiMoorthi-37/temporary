@@ -11,6 +11,5 @@
     cp -rf "$out/.idx/airules.md" "$out/GEMINI.md"
     chmod -R u+w "$out"
     
-    ${if backend == "node" then "( cd \$out && npm i --package-lock-only --ignore-scripts )" else ""}
   '';
 }
