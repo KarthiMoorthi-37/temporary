@@ -1,19 +1,22 @@
 { pkgs, language ? "ts", ... }:
 {
-  packages = [ pkgs.nodejs_20 ];
+  packages = [ pkgs.nodejs_22 ]; # Updated Node.js version
   bootstrap = ''
-    # Create a temporary directory for the Vite project
-    TMP_DIR="$WS_NAME-tmp"
+    # Create the workspace directory and cd into it
+    mkdir "$WS_NAME"
+    cd "$WS_NAME"
+
+    # Use a temporary directory for scaffolding
+    TMP_DIR="vite-tmp"
     npm create -y vite@latest "$TMP_DIR" -- --template ${if language == "ts" then "qwik-ts" else "qwik"}
     
-    # Move contents to the final workspace directory (the current directory)
+    # Move the scaffolded contents into the current directory ($WS_NAME)
     mv "$TMP_DIR"/* "$TMP_DIR"/.[!.]* .
     rmdir "$TMP_DIR"
 
-    # Remove the default eslint config from Vite
+    # Continue with the rest of the setup inside $WS_NAME
     rm -f .eslintrc.cjs
 
-    # Create the .idx directory and copy our custom configuration
     mkdir -p .idx
     cp -rf ${./icon.png} .idx/icon.png
     cp -rf ${./dev.nix} .idx/dev.nix
@@ -21,13 +24,18 @@
     cp -rf ${./.idx/eslint.config.js} ./eslint.config.js
     cp -rf ${./.idx/update-pkg.cjs} .idx/update-pkg.cjs
 
-    # Copy airules to the root for better visibility
     cp -rf .idx/airules.md ./GEMINI.md
 
-    # Run the script to update package.json with new deps and configs
+    # Run the script to update package.json
     node .idx/update-pkg.cjs
 
     # Install all dependencies
     npm install
+
+    # Change directory back to the parent
+    cd ..
+
+    # Move the completed workspace to the final output directory
+    mv "$WS_NAME" "$out"
   '';
 }
