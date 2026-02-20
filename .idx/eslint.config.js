@@ -1,28 +1,30 @@
+// @ts-check
+const tseslint = require("typescript-eslint");
+const qwikPlugin = require("eslint-plugin-qwik");
+const prettierConfig = require("eslint-config-prettier");
 
-import qwik from 'eslint-plugin-qwik';
-import ts from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import prettier from 'eslint-config-prettier';
-
-export default [
-  {
-    files: ['src/**/*.ts', 'src/**/*.tsx'],
-    parser: tsParser,
-    parserOptions: {
-      ecmaVersion: 2021,
-      sourceType: 'module',
-      ecmaFeatures: {
-        jsx: true,
+module.exports = tseslint.config({
+    files: ["**/*.{ts,tsx}"],
+    ignores: ["dist/**", "node_modules/**"],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        project: "./tsconfig.json",
+        tsconfigRootDir: __dirname,
       },
     },
     plugins: {
-      '@typescript-eslint': ts,
-      qwik: qwik,
+      "@typescript-eslint": tseslint.plugin,
+      "qwik": qwikPlugin,
     },
     rules: {
-      ...ts.configs.recommended.rules,
-      ...qwik.configs.recommended.rules,
+      // Start with TypeScript ESLint's recommended rules
+      ...tseslint.configs.recommended.rules,
+      // Then Qwik's recommended rules
+      ...qwikPlugin.configs.recommended.rules,
+      // Then add Prettier for formatting (this disables conflicting rules)
+      ...prettierConfig.rules,
+      // Add any custom rules or overrides here
+      "@typescript-eslint/no-unused-vars": "warn",
     },
-  },
-  prettier,
-];
+});
