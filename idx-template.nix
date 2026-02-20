@@ -6,10 +6,9 @@
     TMP_DIR="$WS_NAME-tmp"
     npm create -y vite@latest "$TMP_DIR" -- --template ${if language == "ts" then "qwik-ts" else "qwik"}
     
-    # Move contents to the final workspace directory, making it the project root
-    mv "$TMP_DIR"/* "$TMP_DIR"/.[!.]* "$WS_NAME"
+    # Move contents to the final workspace directory (the current directory)
+    mv "$TMP_DIR"/* "$TMP_DIR"/.[!.]* .
     rmdir "$TMP_DIR"
-    cd "$WS_NAME"
 
     # Remove the default eslint config from Vite
     rm -f .eslintrc.cjs
