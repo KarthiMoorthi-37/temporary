@@ -19,13 +19,13 @@
     cp -rf ${./dev.nix} .idx/dev.nix
     cp -rf ${./.idx/airules.md} .idx/airules.md
     cp -rf ${./.idx/eslint.config.js} ./eslint.config.js
-    cp -rf ${./.idx/update-pkg.js} .idx/update-pkg.js
+    cp -rf ${./.idx/update-pkg.cjs} .idx/update-pkg.cjs
 
     # Copy airules to the root for better visibility
     cp -rf .idx/airules.md ./GEMINI.md
 
     # Run the script to update package.json with new deps and configs
-    node .idx/update-pkg.js
+    node .idx/update-pkg.cjs
 
     # Install all dependencies
     npm install
