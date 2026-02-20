@@ -1,6 +1,6 @@
 { pkgs, language ? "ts", ... }:
 {
-  packages = [ pkgs.nodejs_22 ]; # Updated Node.js version
+  packages = [ pkgs.nodejs_21 ]; # Use the latest available Node.js version
   bootstrap = ''
     # Create the workspace directory and cd into it
     mkdir "$WS_NAME"
